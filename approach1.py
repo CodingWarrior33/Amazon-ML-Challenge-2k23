@@ -59,21 +59,20 @@ for group in test_df.groups:
         attr2 = df["TITLE_BUL"]
         attr3 = df["PRODUCT_ID"]
         
-        attr1_tfidf = tfidf_vectorizer.transform(attr1)  # Use transform instead of fit_transform
-        attr2_tfidf = tfidf_vectorizer.transform(attr2)  # Use transform instead of fit_transform
+        attr1_tfidf = tfidf_vectorizer.transform(attr1) 
+        attr2_tfidf = tfidf_vectorizer.transform(attr2)  
 
         max_len = 128
 
-        # Extracting the vectors
         attr1_vectors = attr1_tfidf.toarray()
         attr2_vectors = attr2_tfidf.toarray()
 
-        if len(attr1_vectors) > 128:  # Use greater than or equal to (>=) instead of greater than (>)
+        if len(attr1_vectors) > 128: 
             attr1_vectors = attr1_vectors[:128]
         else:
             attr1_vectors = pad_sequences(attr1_vectors, maxlen=max_len, padding='post')
 
-        if len(attr2_vectors) > 128:  # Use greater than or equal to (>=) instead of greater than (>)
+        if len(attr2_vectors) > 128: 
             attr2_vectors = attr2_vectors[:128]
         else:
             attr2_vectors = pad_sequences(attr2_vectors, maxlen=max_len, padding='post')
@@ -83,7 +82,7 @@ for group in test_df.groups:
 
         X_test = np.column_stack((attr1_vectors, attr2_vectors))
 
-        url = "train_" + str(group) + ".csv"  # Simplify URL assignment using string concatenation
+        url = "train_" + str(group) + ".csv"  
 
         model = output_regression(url)
         y_submission = model.predict(X_test)
