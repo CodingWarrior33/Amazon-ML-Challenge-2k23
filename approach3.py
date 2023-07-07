@@ -33,9 +33,6 @@ else:
     device = 'cpu'
     print('No GPU found Running on cpu')
 
-# Commented out IPython magic to ensure Python compatibility.
-# %cd /content/gdrive/MyDrive/
-
 train_df = pd.read_csv("train.csv")
 test_df = pd.read_csv("test.csv")
 sample_df = pd.read_csv("sample_submission.csv")
@@ -204,8 +201,6 @@ class AmazonClassifier(nn.Module):
 
 model = AmazonClassifier(base_model_name=model_name,n_classes=len(np.unique(labels)))
 
-# model.load_state_dict(torch.load('/content/drive/MyDrive/AmazonMLChallenge/model_bert_2.pth'))
-
 model.to(device)
 
 num_epochs = 2
@@ -252,7 +247,6 @@ def train_epoch(
     loss = loss_fn(outputs, labels)
 
     correct_predictions += torch.sum(preds == labels)
-    # print(loss)
     losses.append(loss.item())
 
     loss.backward()
@@ -262,108 +256,6 @@ def train_epoch(
     optimizer.zero_grad()
 
   return correct_predictions.double() / n_examples, np.mean(losses)
-
-# def eval_model(model, data_loader, loss_fn, device, n_examples):
-#   model = model.eval()
-
-#   losses = []
-#   correct_predictions = 0
-
-#   with torch.no_grad():
-#     for i,d in enumerate(data_loader):
-#       if i%100 == 0:
-#           print(f"Processing batch {i+1}/{len(data_loader)}")
-#       input_ids = d["input_ids"].to(device)
-#       attention_mask = d["attention_mask"].to(device)
-#       labels = d["labels"].to(device)
-
-#       outputs = model(
-#         input_ids=input_ids,
-#         attention_mask=attention_mask
-#       )
-#       _, preds = torch.max(outputs, dim=1)
-
-#       loss = loss_fn(outputs, labels)
-
-#       correct_predictions += torch.sum(preds == labels)
-#       losses.append(loss.item())
-
-#   return correct_predictions.double() / n_examples, np.mean(losses)
-
-# Commented out IPython magic to ensure Python compatibility.
-# %%time
-# 
-# history = defaultdict(list)
-# best_accuracy = 0
-# 
-# for epoch in tqdm(range(num_epochs)):
-# 
-#   print(f'Epoch {epoch + 1}/{num_epochs}')
-#   print('-' * 10)
-# 
-#   train_acc, train_loss = train_epoch(
-#     model,
-#     train_loader,    
-#     loss_fn, 
-#     optimizer, 
-#     device, 
-#     scheduler, 
-#     len(train_labels)
-#   )
-# 
-#   print(f'Train loss {train_loss} accuracy {train_acc}')
-# 
-#   val_acc, val_loss = eval_model(
-#     model,
-#     val_loader,
-#     loss_fn, 
-#     device, 
-#     len(val_labels)
-#   )
-# 
-#   print(f'Val loss {val_loss} accuracy {val_acc}')
-#   print()
-# 
-#   history['train_acc'].append(train_acc)
-#   history['train_loss'].append(train_loss)
-#   history['val_acc'].append(val_acc)
-#   history['val_loss'].append(val_loss)
-# 
-#   if val_acc > best_accuracy:
-#     torch.save(model.state_dict(), 'best_model_state.bin')
-#     best_accuracy = val_acc
-#     print(best_accuracy)
-
-# import torch
-# import numpy as np
-
-# def eval_model(model, data_loader, loss_fn, device, n_examples):
-#     model = model.eval()
-
-#     losses = []
-#     squared_errors = []
-
-#     with torch.no_grad():
-#         for i,d in enumerate(data_loader):
-#             if i % 100 == 0:
-#                 print(f"Processing batch {i+1}/{len(data_loader)}")
-#             input_ids = d["input_ids"].to(device)
-#             attention_mask = d["attention_mask"].to(device)
-#             labels = d["labels"].to(device)
-
-#             outputs = model(
-#                 input_ids=input_ids,
-#                 attention_mask=attention_mask
-#             )
-#             preds = outputs.squeeze()
-
-#             loss = loss_fn(outputs, labels)
-
-#             squared_errors.extend((preds - labels)**2)
-#             losses.append(loss.item())
-
-#     rmse = torch.sqrt(torch.mean(torch.tensor(squared_errors)))
-#     return rmse, np.mean(losses)
 
 import torch
 import numpy as np
